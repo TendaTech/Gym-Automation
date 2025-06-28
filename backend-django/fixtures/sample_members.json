@@ -1,0 +1,102 @@
+[
+  {
+    "model": "members.member",
+    "pk": "550e8400-e29b-41d4-a716-446655440001",
+    "fields": {
+      "full_name": "Sarah Johnson",
+      "email": "sarah.johnson@email.com",
+      "phone": "+1-555-0101",
+      "subscription_due_date": "2024-12-20",
+      "birthday": "1992-03-15",
+      "last_checkin_date": "2024-12-10",
+      "emergency_contact": "John Johnson - +1-555-0102",
+      "address": "123 Main St, Anytown, ST 12345",
+      "membership_type": "premium",
+      "notes": "Prefers morning workouts. Interested in yoga classes.",
+      "milestones": ["Lost 15kg", "Completed first marathon", "50 consecutive push-ups"],
+      "is_active": true,
+      "created_at": "2024-01-15T10:00:00Z",
+      "updated_at": "2024-12-10T14:30:00Z"
+    }
+  },
+  {
+    "model": "members.member",
+    "pk": "550e8400-e29b-41d4-a716-446655440002",
+    "fields": {
+      "full_name": "Mike Chen",
+      "email": "mike.chen@email.com",
+      "phone": "+1-555-0201",
+      "subscription_due_date": "2024-12-18",
+      "birthday": "1988-07-22",
+      "last_checkin_date": "2024-12-05",
+      "emergency_contact": "Lisa Chen - +1-555-0202",
+      "address": "456 Oak Ave, Somewhere, ST 67890",
+      "membership_type": "vip",
+      "notes": "Powerlifter. Needs access to heavy weights section.",
+      "milestones": ["Deadlift 200kg", "Lost 20kg", "Bench press 150kg"],
+      "is_active": true,
+      "created_at": "2024-02-01T09:15:00Z",
+      "updated_at": "2024-12-05T16:45:00Z"
+    }
+  },
+  {
+    "model": "members.member",
+    "pk": "550e8400-e29b-41d4-a716-446655440003",
+    "fields": {
+      "full_name": "Emma Rodriguez",
+      "email": "emma.rodriguez@email.com",
+      "phone": "+1-555-0301",
+      "subscription_due_date": "2024-12-15",
+      "birthday": "1995-12-14",
+      "last_checkin_date": "2024-11-28",
+      "emergency_contact": "Carlos Rodriguez - +1-555-0302",
+      "address": "789 Pine St, Elsewhere, ST 13579",
+      "membership_type": "basic",
+      "notes": "Yoga instructor. Teaches Tuesday evening classes.",
+      "milestones": ["First pull-up", "Yoga instructor certification", "Flexibility goals achieved"],
+      "is_active": true,
+      "created_at": "2024-03-10T11:20:00Z",
+      "updated_at": "2024-11-28T18:15:00Z"
+    }
+  },
+  {
+    "model": "members.member",
+    "pk": "550e8400-e29b-41d4-a716-446655440004",
+    "fields": {
+      "full_name": "David Park",
+      "email": "david.park@email.com",
+      "phone": "+1-555-0401",
+      "subscription_due_date": "2025-01-10",
+      "birthday": "1990-09-08",
+      "last_checkin_date": null,
+      "emergency_contact": "Susan Park - +1-555-0402",
+      "address": "321 Elm Dr, Nowhere, ST 24680",
+      "membership_type": "student",
+      "notes": "College student. Prefers evening hours.",
+      "milestones": [],
+      "is_active": false,
+      "created_at": "2024-04-05T13:45:00Z",
+      "updated_at": "2024-11-15T12:00:00Z"
+    }
+  },
+  {
+    "model": "members.member",
+    "pk": "550e8400-e29b-41d4-a716-446655440005",
+    "fields": {
+      "full_name": "Lisa Thompson",
+      "email": "lisa.thompson@email.com",
+      "phone": "+1-555-0501",
+      "subscription_due_date": "2024-12-25",
+      "birthday": "1987-12-14",
+      "last_checkin_date": "2024-12-12",
+      "emergency_contact": "Mark Thompson - +1-555-0502",
+      "address": "654 Maple Ln, Anywhere, ST 97531",
+      "membership_type": "premium",
+      "notes": "Marathon runner. Needs access to cardio equipment.",
+      "milestones": ["Bench press bodyweight", "5K under 25 minutes", "Lost 25kg", "Boston Marathon qualifier"],
+      "is_active": true,
+      "created_at": "2024-05-20T15:30:00Z",
+      "updated_at": "2024-12-12T20:10:00Z"
+    }
+  }
+]

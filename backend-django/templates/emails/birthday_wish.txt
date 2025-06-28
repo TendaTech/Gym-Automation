@@ -1,0 +1,29 @@
+Happy Birthday, {{ member.full_name|title }}!
+
+It's Your Special Day!
+
+{% if age %}
+Wishing you a fantastic {{ age }}th birthday!
+{% else %}
+Wishing you a fantastic birthday!
+{% endif %}
+
+On your special day, we want to celebrate not just another year of life, but another year of your commitment to health and fitness!
+
+Birthday Gift: Enjoy a complimentary personal training session this month - our gift to you!
+
+Here's to another year of:
+- Achieving new fitness milestones
+- Crushing your goals
+- Being an inspiration to others
+- Taking care of your health
+
+Claim your birthday gift at: {{ frontend_url }}/birthday-gift
+
+We hope your birthday is filled with joy, laughter, and maybe a great workout too!
+
+Happy Birthday once again!
+The Gym Team
+
+---
+This birthday wish was sent to {{ member.email }}. Have an amazing day!

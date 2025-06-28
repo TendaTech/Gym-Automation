@@ -1,0 +1,29 @@
+We Miss You, {{ member.full_name|title }}!
+
+Come Back to the Gym!
+
+It's been {{ days_since_checkin }} days since your last visit, and we wanted to reach out because we miss seeing you!
+
+We understand that life can get busy, but remember:
+- Your fitness goals are still waiting for you
+- Every day is a new opportunity to get stronger
+- Your gym family is here to support you
+- Even a short workout is better than none
+
+Getting back on track is easier than you think:
+- Start with just 20-30 minutes
+- Try a beginner-friendly class
+- Book a session with a personal trainer
+- Bring a friend for motivation
+
+Book your comeback session at: {{ frontend_url }}/book-session
+
+Remember, the hardest part is just showing up. Once you're here, you'll remember why you started your fitness journey in the first place.
+
+We're here to help you get back on track. Don't hesitate to reach out if you need any support or have questions about getting started again.
+
+Looking forward to seeing you soon!
+The Gym Team
+
+---
+This message was sent to {{ member.email }}. We're here whenever you're ready to return!

@@ -1,0 +1,30 @@
+Stay Strong, {{ member.full_name|title }}!
+
+Your Fitness Journey Continues
+
+We hope you're crushing your fitness goals! Remember, every workout brings you one step closer to the best version of yourself.
+
+"The only bad workout is the one that didn't happen."
+
+This Week's Motivation:
+- Set a new personal record
+- Try a new workout routine
+- Focus on nutrition alongside your training
+- Don't forget the importance of rest and recovery
+
+{% if member.milestones %}
+Your Achievements:
+{% for milestone in member.milestones %}
+- {{ milestone }}
+{% endfor %}
+{% endif %}
+
+Explore new workouts at: {{ frontend_url }}/workouts
+
+Keep pushing your limits, and remember - we're here to support you every step of the way!
+
+See you at the gym!
+The Gym Team
+
+---
+This email was sent to {{ member.email }}. Keep up the great work!

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stay Strong!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 0 0 10px 10px;
+        }
+        .quote {
+            background: #fff;
+            padding: 20px;
+            border-left: 4px solid #ff6b35;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        .button {
+            display: inline-block;
+            background: #ff6b35;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>💪 Stay Strong, {{ member.full_name|title }}!</h1>
+    </div>
+    
+    <div class="content">
+        <h2>Your Fitness Journey Continues</h2>
+        
+        <p>We hope you're crushing your fitness goals! Remember, every workout brings you one step closer to the best version of yourself.</p>
+        
+        <div class="quote">
+            "The only bad workout is the one that didn't happen."
+        </div>
+        
+        <h3>This Week's Motivation:</h3>
+        <ul>
+            <li>🎯 Set a new personal record</li>
+            <li>🏃‍♀️ Try a new workout routine</li>
+            <li>🥗 Focus on nutrition alongside your training</li>
+            <li>😴 Don't forget the importance of rest and recovery</li>
+        </ul>
+        
+        {% if member.milestones %}
+        <h3>Your Achievements:</h3>
+        <ul>
+            {% for milestone in member.milestones %}
+            <li>✅ {{ milestone }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        
+        <a href="{{ frontend_url }}/workouts" class="button">Explore New Workouts</a>
+        
+        <p>Keep pushing your limits, and remember - we're here to support you every step of the way!</p>
+        
+        <p>See you at the gym!<br>
+        The Gym Team</p>
+    </div>
+    
+    <div class="footer">
+        <p>This email was sent to {{ member.email }}. Keep up the great work!</p>
+    </div>
+</body>
+</html>

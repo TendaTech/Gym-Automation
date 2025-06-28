@@ -1,0 +1,45 @@
+# Django and DRF
+Django==4.2.7
+djangorestframework==3.14.0
+django-cors-headers==4.3.1
+django-filter==23.3
+drf-spectacular==0.26.5
+
+# Database
+psycopg2-binary==2.9.7
+dj-database-url==2.1.0
+
+# Authentication
+djangorestframework-simplejwt==5.3.0
+django-allauth==0.57.0
+
+# Task Queue
+celery==5.3.4
+redis==5.0.1
+django-celery-beat==2.5.0
+django-celery-results==2.5.0
+
+# Email
+sendgrid==6.10.0
+django-anymail==10.2
+
+# Environment and Configuration
+python-decouple==3.8
+python-dotenv==1.0.0
+
+# Utilities
+Pillow==10.0.1
+python-dateutil==2.8.2
+pytz==2023.3
+
+# Development
+django-debug-toolbar==4.2.0
+django-extensions==3.2.3
+
+# Testing
+factory-boy==3.3.0
+coverage==7.3.2
+
+# Production
+gunicorn==21.2.0
+whitenoise==6.6.0

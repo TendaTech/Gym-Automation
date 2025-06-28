@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>We Miss You!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 0 0 10px 10px;
+        }
+        .comeback-message {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+            border: 2px solid #4ecdc4;
+        }
+        .button {
+            display: inline-block;
+            background: #4ecdc4;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏃‍♀️ We Miss You, {{ member.full_name|title }}!</h1>
+    </div>
+    
+    <div class="content">
+        <div class="comeback-message">
+            <h2>💚 Come Back to the Gym!</h2>
+            <p>It's been {{ days_since_checkin }} days since your last visit</p>
+        </div>
+        
+        <p>We noticed you haven't been to the gym in a while, and we wanted to reach out because we miss seeing you!</p>
+        
+        <p>We understand that life can get busy, but remember:</p>
+        <ul>
+            <li>🎯 Your fitness goals are still waiting for you</li>
+            <li>💪 Every day is a new opportunity to get stronger</li>
+            <li>🤝 Your gym family is here to support you</li>
+            <li>⚡ Even a short workout is better than none</li>
+        </ul>
+        
+        <p><strong>Getting back on track is easier than you think:</strong></p>
+        <ul>
+            <li>Start with just 20-30 minutes</li>
+            <li>Try a beginner-friendly class</li>
+            <li>Book a session with a personal trainer</li>
+            <li>Bring a friend for motivation</li>
+        </ul>
+        
+        <a href="{{ frontend_url }}/book-session" class="button">Book Your Comeback Session</a>
+        
+        <p>Remember, the hardest part is just showing up. Once you're here, you'll remember why you started your fitness journey in the first place.</p>
+        
+        <p>We're here to help you get back on track. Don't hesitate to reach out if you need any support or have questions about getting started again.</p>
+        
+        <p>Looking forward to seeing you soon!<br>
+        The Gym Team</p>
+    </div>
+    
+    <div class="footer">
+        <p>This message was sent to {{ member.email }}. We're here whenever you're ready to return!</p>
+    </div>
+</body>
+</html>

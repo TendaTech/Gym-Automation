@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        .content {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 0 0 10px 10px;
+        }
+        .birthday-message {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+            border: 2px solid #ff6b9d;
+        }
+        .button {
+            display: inline-block;
+            background: #ff6b9d;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎉 Happy Birthday, {{ member.full_name|title }}! 🎂</h1>
+    </div>
+    
+    <div class="content">
+        <div class="birthday-message">
+            <h2>🎈 It's Your Special Day! 🎈</h2>
+            {% if age %}
+            <p>Wishing you a fantastic {{ age }}{{ age|add:"0"|slice:"-1"|add:"th" }} birthday!</p>
+            {% else %}
+            <p>Wishing you a fantastic birthday!</p>
+            {% endif %}
+        </div>
+        
+        <p>On your special day, we want to celebrate not just another year of life, but another year of your commitment to health and fitness!</p>
+        
+        <p>🎁 <strong>Birthday Gift:</strong> Enjoy a complimentary personal training session this month - our gift to you!</p>
+        
+        <p>Here's to another year of:</p>
+        <ul>
+            <li>💪 Achieving new fitness milestones</li>
+            <li>🏆 Crushing your goals</li>
+            <li>🌟 Being an inspiration to others</li>
+            <li>❤️ Taking care of your health</li>
+        </ul>
+        
+        <a href="{{ frontend_url }}/birthday-gift" class="button">Claim Your Gift</a>
+        
+        <p>We hope your birthday is filled with joy, laughter, and maybe a great workout too!</p>
+        
+        <p>Happy Birthday once again!<br>
+        The Gym Team 🎉</p>
+    </div>
+    
+    <div class="footer">
+        <p>This birthday wish was sent to {{ member.email }}. Have an amazing day!</p>
+    </div>
+</body>
+</html>
