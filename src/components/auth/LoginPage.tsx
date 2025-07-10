@@ -1,109 +1,145 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  Mail, 
-  Lock, 
-  Phone, 
-  Eye, 
-  EyeOff, 
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
   Dumbbell,
   Chrome,
   Facebook,
   Twitter,
-  Apple
-} from 'lucide-react';
-import { 
-  signInWithEmail, 
-  signInWithGoogle, 
-  signInWithFacebook, 
-  signInWithTwitter, 
+  Apple,
+} from "lucide-react";
+import {
+  signInWithEmail,
+  signUpWithEmail,
+  signInWithGoogle,
+  signInWithFacebook,
+  signInWithTwitter,
   signInWithApple,
-  signInWithPhone,
-  RecaptchaVerifier,
-  auth
-} from '../../lib/firebase';
-import toast from 'react-hot-toast';
+  auth,
+} from "../../lib/firebase";
+import toast from "react-hot-toast";
 
 export const LoginPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [loginMethod, setLoginMethod] = useState<'email' | 'phone'>('email');
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    phone: '',
-    verificationCode: ''
+    email: "",
+    password: "",
   });
-  const [verificationId, setVerificationId] = useState('');
-  const [showVerification, setShowVerification] = useState(false);
-  
+
   const navigate = useNavigate();
 
-  const handleEmailLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    
+  const handleDjangoBackendAuth = async (
+    email: string,
+    firebaseUid: string
+  ) => {
     try {
-      await signInWithEmail(formData.email, formData.password);
-      toast.success('Welcome back!');
-      navigate('/dashboard');
+      const endpoint = isLogin ? "/auth/login" : "/api/auth/register/";
+      const response = await fetch(`http://localhost:8000${endpoint}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password: firebaseUid,
+          password_confirm: firebaseUid, // Use Firebase UID as password
+          username: email.split("@")[0], // Use email prefix as username
+          first_name: email.split("@")[0], // Use email prefix as first name
+          last_name: "", // Leave last name empty
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Backend authentication failed");
+      }
+
+      const data = await response.json();
+      localStorage.setItem("access_token", data.access);
+      localStorage.setItem("refresh_token", data.refresh);
+      return data;
     } catch (error: any) {
-      toast.error(error.message || 'Login failed');
-    } finally {
-      setLoading(false);
+      throw error;
     }
   };
 
-  const handlePhoneLogin = async (e: React.FormEvent) => {
+  const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      if (!showVerification) {
-        // Initialize reCAPTCHA
-        const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-          size: 'invisible'
-        });
-        
-        const confirmationResult = await signInWithPhone(formData.phone, recaptchaVerifier);
-        setVerificationId(confirmationResult.verificationId);
-        setShowVerification(true);
-        toast.success('Verification code sent!');
+      let userCredential;
+      if (isLogin) {
+        userCredential = await signInWithEmail(
+          formData.email,
+          formData.password
+        );
       } else {
-        // Verify code (this would be implemented with the confirmation result)
-        toast.success('Phone verification successful!');
-        navigate('/dashboard');
+        userCredential = await signUpWithEmail(
+          formData.email,
+          formData.password
+        );
       }
+
+      // Get Firebase UID
+      const firebaseUid = userCredential.user.uid;
+
+      // Authenticate with Django backend
+      await handleDjangoBackendAuth(formData.email, firebaseUid);
+
+      toast.success(
+        isLogin ? "Welcome back!" : "Account created successfully!"
+      );
+      navigate("/dashboard");
     } catch (error: any) {
-      toast.error(error.message || 'Phone verification failed');
+      toast.error(
+        error.message || (isLogin ? "Login failed" : "Signup failed")
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSocialLogin = async (provider: 'google' | 'facebook' | 'twitter' | 'apple') => {
+  const handleSocialLogin = async (
+    provider: "google" | "facebook" | "twitter" | "apple"
+  ) => {
     setLoading(true);
-    
+
     try {
+      let userCredential;
       switch (provider) {
-        case 'google':
-          await signInWithGoogle();
+        case "google":
+          userCredential = await signInWithGoogle();
           break;
-        case 'facebook':
-          await signInWithFacebook();
+        case "facebook":
+          userCredential = await signInWithFacebook();
           break;
-        case 'twitter':
-          await signInWithTwitter();
+        case "twitter":
+          userCredential = await signInWithTwitter();
           break;
-        case 'apple':
-          await signInWithApple();
+        case "apple":
+          userCredential = await signInWithApple();
           break;
       }
-      toast.success('Login successful!');
-      navigate('/dashboard');
+
+      if (!userCredential) throw new Error("Social login failed");
+
+      // Get user info
+      const firebaseUid = userCredential.user.uid;
+      const email = userCredential.user.email || "";
+
+      // Authenticate with Django backend
+      await handleDjangoBackendAuth(email, firebaseUid);
+
+      toast.success("Login successful!");
+      navigate("/dashboard");
     } catch (error: any) {
-      toast.error(error.message || 'Social login failed');
+      toast.error(error.message || "Social login failed");
     } finally {
       setLoading(false);
     }
@@ -117,7 +153,9 @@ export const LoginPage: React.FC = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-600 rounded-full mb-4">
             <Dumbbell className="h-8 w-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">FitTrack Pro</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            FitTrack Pro
+          </h1>
           <p className="text-gray-600">Your complete gym management solution</p>
         </div>
 
@@ -125,139 +163,87 @@ export const LoginPage: React.FC = () => {
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              {isLogin ? 'Welcome Back' : 'Create Account'}
+              {isLogin ? "Welcome Back" : "Create Account"}
             </h2>
             <p className="text-gray-600">
-              {isLogin ? 'Sign in to your account' : 'Join our fitness community'}
+              {isLogin
+                ? "Sign in to your account"
+                : "Join our fitness community"}
             </p>
           </div>
 
-          {/* Login Method Toggle */}
-          <div className="flex bg-gray-100 rounded-lg p-1 mb-6">
-            <button
-              onClick={() => setLoginMethod('email')}
-              className={`flex-1 flex items-center justify-center py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                loginMethod === 'email'
-                  ? 'bg-white text-primary-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              <Mail className="h-4 w-4 mr-2" />
-              Email
-            </button>
-            <button
-              onClick={() => setLoginMethod('phone')}
-              className={`flex-1 flex items-center justify-center py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                loginMethod === 'phone'
-                  ? 'bg-white text-primary-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              <Phone className="h-4 w-4 mr-2" />
-              Phone
-            </button>
-          </div>
-
           {/* Email Login Form */}
-          {loginMethod === 'email' && (
-            <form onSubmit={handleEmailLogin} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <input
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
-                    placeholder="Enter your email"
-                  />
-                </div>
+          <form onSubmit={handleEmailAuth} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email Address
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      email: e.target.value,
+                    }))
+                  }
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+                  placeholder="Enter your email"
+                />
               </div>
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Password
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    required
-                    value={formData.password}
-                    onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
-                    placeholder="Enter your password"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                  </button>
-                </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  required
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      password: e.target.value,
+                    }))
+                  }
+                  className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+                  placeholder="Enter your password"
+                  minLength={6}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
+                </button>
               </div>
+            </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-primary-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {loading ? 'Signing in...' : (isLogin ? 'Sign In' : 'Create Account')}
-              </button>
-            </form>
-          )}
-
-          {/* Phone Login Form */}
-          {loginMethod === 'phone' && (
-            <form onSubmit={handlePhoneLogin} className="space-y-4">
-              {!showVerification ? (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number
-                  </label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      type="tel"
-                      required
-                      value={formData.phone}
-                      onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
-                      placeholder="+1 (555) 123-4567"
-                    />
-                  </div>
-                </div>
-              ) : (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Verification Code
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.verificationCode}
-                    onChange={(e) => setFormData(prev => ({ ...prev, verificationCode: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors text-center text-lg tracking-widest"
-                    placeholder="123456"
-                    maxLength={6}
-                  />
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-primary-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {loading ? 'Processing...' : (showVerification ? 'Verify Code' : 'Send Code')}
-              </button>
-            </form>
-          )}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-primary-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {loading
+                ? isLogin
+                  ? "Signing in..."
+                  : "Creating account..."
+                : isLogin
+                ? "Sign In"
+                : "Create Account"}
+            </button>
+          </form>
 
           {/* Social Login */}
           <div className="mt-6">
@@ -266,13 +252,15 @@ export const LoginPage: React.FC = () => {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                <span className="px-2 bg-white text-gray-500">
+                  Or continue with
+                </span>
               </div>
             </div>
 
             <div className="mt-6 grid grid-cols-2 gap-3">
               <button
-                onClick={() => handleSocialLogin('google')}
+                onClick={() => handleSocialLogin("google")}
                 disabled={loading}
                 className="w-full inline-flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
@@ -281,7 +269,7 @@ export const LoginPage: React.FC = () => {
               </button>
 
               <button
-                onClick={() => handleSocialLogin('facebook')}
+                onClick={() => handleSocialLogin("facebook")}
                 disabled={loading}
                 className="w-full inline-flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
@@ -290,7 +278,7 @@ export const LoginPage: React.FC = () => {
               </button>
 
               <button
-                onClick={() => handleSocialLogin('twitter')}
+                onClick={() => handleSocialLogin("twitter")}
                 disabled={loading}
                 className="w-full inline-flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
@@ -299,7 +287,7 @@ export const LoginPage: React.FC = () => {
               </button>
 
               <button
-                onClick={() => handleSocialLogin('apple')}
+                onClick={() => handleSocialLogin("apple")}
                 disabled={loading}
                 className="w-full inline-flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
@@ -315,13 +303,12 @@ export const LoginPage: React.FC = () => {
               onClick={() => setIsLogin(!isLogin)}
               className="text-sm text-primary-600 hover:text-primary-500 font-medium"
             >
-              {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+              {isLogin
+                ? "Don't have an account? Sign up"
+                : "Already have an account? Sign in"}
             </button>
           </div>
         </div>
-
-        {/* reCAPTCHA container */}
-        <div id="recaptcha-container"></div>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
-import { initializeApp } from 'firebase/app';
-import { 
-  getAuth, 
-  signInWithEmailAndPassword, 
+import { initializeApp } from "firebase/app";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
@@ -12,18 +12,25 @@ import {
   signInWithPhoneNumber,
   signOut,
   onAuthStateChanged,
-  User
-} from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
+  User,
+} from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "demo-api-key",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "gym-system-demo.firebaseapp.com",
+  apiKey:
+    import.meta.env.VITE_FIREBASE_API_KEY ||
+    "AIzaSyAYd502lLmdcUtcUdGqEz-agkxym9cwmuU",
+  authDomain:
+    import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ||
+    "gym-system-demo.firebaseapp.com",
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "gym-system-demo",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "gym-system-demo.appspot.com",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "123456789",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:123456789:web:abcdef123456"
+  storageBucket:
+    import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ||
+    "gym-system-demo.appspot.com",
+  messagingSenderId:
+    import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "123456789",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:123456789:web:abcdef123456",
 };
 
 // Initialize Firebase
@@ -38,19 +45,19 @@ export const storage = getStorage(app);
 export const googleProvider = new GoogleAuthProvider();
 export const facebookProvider = new FacebookAuthProvider();
 export const twitterProvider = new TwitterAuthProvider();
-export const appleProvider = new OAuthProvider('apple.com');
+export const appleProvider = new OAuthProvider("apple.com");
 
 // Configure providers
 googleProvider.setCustomParameters({
-  prompt: 'select_account'
+  prompt: "select_account",
 });
 
 facebookProvider.setCustomParameters({
-  display: 'popup'
+  display: "popup",
 });
 
 appleProvider.setCustomParameters({
-  locale: 'en'
+  locale: "en",
 });
 
 // Export RecaptchaVerifier for phone authentication
@@ -81,7 +88,10 @@ export const signInWithApple = () => {
   return signInWithPopup(auth, appleProvider);
 };
 
-export const signInWithPhone = (phoneNumber: string, recaptchaVerifier: RecaptchaVerifier) => {
+export const signInWithPhone = (
+  phoneNumber: string,
+  recaptchaVerifier: RecaptchaVerifier
+) => {
   return signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier);
 };
 

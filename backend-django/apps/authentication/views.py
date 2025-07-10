@@ -31,6 +31,10 @@ class RegisterView(generics.CreateAPIView):
         }, status=status.HTTP_201_CREATED)
 
 
+
+#
+
+
 class LogoutView(APIView):
     """
     Logout user by blacklisting the refresh token

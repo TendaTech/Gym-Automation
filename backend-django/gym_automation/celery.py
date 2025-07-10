@@ -1,6 +1,6 @@
 import os
 from celery import Celery
-from django.conf import settings
+import logging
 
 # Set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gym_automation.settings.development')
@@ -36,6 +36,8 @@ app.conf.beat_schedule = {
 
 app.conf.timezone = 'UTC'
 
+logger = logging.getLogger(__name__)
+
 @app.task(bind=True)
 def debug_task(self):
-    print(f'Request: {self.request!r}')
+    logger.info(f'Request: {self.request!r}')
