@@ -46,8 +46,8 @@ export const LoginPage: React.FC = () => {
         },
         body: JSON.stringify({
           email,
-          password: firebaseUid,
-          password_confirm: firebaseUid, // Use Firebase UID as password
+          password: formData.password,
+          password_confirm: formData.password, // Use Firebase UID as password
           username: email.split("@")[0], // Use email prefix as username
           first_name: email.split("@")[0], // Use email prefix as first name
           last_name: "", // Leave last name empty

@@ -1,7 +1,7 @@
 import { Member, EmailLog, FilterType } from "../types/member";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api";
 
 class ApiService {
   private getAuthHeaders() {
@@ -118,7 +118,7 @@ class ApiService {
 
   // Member Portal
   async getMemberPortalDashboard() {
-    const response = await fetch(`${API_BASE_URL}/portal/dashboard/`, {
+    const response = await fetch(`${API_BASE_URL}/members/portal/dashboard/`, {
       headers: this.getAuthHeaders(),
     });
     return this.handleResponse(response);
@@ -251,7 +251,7 @@ class ApiService {
 
   // Email Management
   async getEmailLogs(): Promise<EmailLog[]> {
-    const response = await fetch(`${API_BASE_URL}/emails/logs/`, {
+    const response = await fetch(`${API_BASE_URL}/members/emails/logs/`, {
       headers: this.getAuthHeaders(),
     });
     const data = await this.handleResponse(response);
